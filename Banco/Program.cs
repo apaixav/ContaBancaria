@@ -24,6 +24,26 @@ namespace Banco
 
             c1.Visualizar();
 
+            ContaCorrente cc1 = new ContaCorrente(2, 123, 1, "Samantha", 100000000.00M, 1000);
+
+            cc1 .Visualizar();
+            cc1.Sacar(200000000.00M);
+
+            cc1.Visualizar();
+
+            cc1.Depositar(5000);
+
+            cc1.Visualizar();
+
+            ContaPoupanca cp1 = new ContaPoupanca(3, 123, 2, "Lucas", 5000000.00M, 28);
+
+            cp1.Visualizar();
+            cp1.Sacar(1000);
+            cp1.Visualizar();
+
+            cp1.Depositar(5000);
+            cp1.Visualizar();
+
             while (true)
             {
                 Console.BackgroundColor = ConsoleColor.Black;
