@@ -9,7 +9,7 @@ namespace Banco
         static void Main(string[] args)
         {
            
-            int opcao = 0, agencia, tipo,  aniversario;
+            int opcao = 0, agencia, tipo,  aniversario, numero;
             string? titular;
             decimal saldo, limite;
 
@@ -43,9 +43,18 @@ namespace Banco
                 Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
                 Console.WriteLine("Entre com a opção desejada:                             ");
                 Console.WriteLine("                                                        ");
-
-                opcao = Convert.ToInt32(Console.ReadLine());
-                Console.Clear();
+                try
+                {
+                    opcao = Convert.ToInt32(Console.ReadLine());
+                }
+                catch(FormatException)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Digite um valor inteiro entre 1 e 9");
+                    opcao = 0; 
+                    Console.ResetColor();
+                }
+                
                 if (opcao == 9)               
                 {
                    Console.WriteLine("\nBanco do Brazil com Z - O seu Futuro começa aqui!");
@@ -110,6 +119,11 @@ namespace Banco
                         Console.WriteLine("Busca das contas por números:\n\n ");
                         Console.ResetColor();
 
+                        Console.WriteLine("Digite o numero da conta: ");
+                        numero = Convert.ToInt32(Console.ReadLine());
+
+                        contas.ProcurarPorNumero(numero);
+
                         KeyPress();
                         break;
 
@@ -118,13 +132,66 @@ namespace Banco
                         Console.WriteLine("Atualização dos dados da conta:\n\n ");
                         Console.ResetColor();
 
-                        KeyPress();
+                        Console.WriteLine("Digite o numero da conta: ");
+                        numero = Convert.ToInt32(Console.ReadLine());
+
+                        var conta = contas.BuscarNaCollection(numero);
+
+                        if(conta is not null)
+                        {
+
+                            Console.WriteLine("Digite o Número da Agência:");
+                            agencia = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("Digite o Nome do Titular:");
+                            titular = Console.ReadLine();
+                            /*do
+                            {
+                                Console.WriteLine("Digite o Tipo da Conta:");
+                                tipo = Convert.ToInt32(Console.ReadLine());
+
+                            } while (tipo != 1 && tipo != 2);*/
+
+                            Console.WriteLine("Digite o Saldo da Conta:");
+                            saldo = Convert.ToDecimal(Console.ReadLine());
+
+                            tipo = conta.GetTipo();
+                            switch (tipo)
+                            {
+
+                                case 1:
+                                    Console.WriteLine("Digite o Limite da Conta:");
+                                    limite = Convert.ToDecimal(Console.ReadLine());
+
+                                    contas.Atualizar(new ContaCorrente(numero, agencia, tipo, titular, saldo, limite));
+                                    break;
+                                case 2:
+
+                                    Console.WriteLine("Digite o dia do Aniversário:");
+                                    aniversario = Convert.ToInt32(Console.ReadLine());
+
+                                    contas.Atualizar(new ContaPoupanca(numero, agencia, tipo, titular, saldo, aniversario));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine($"A conta número {numero}, não foi encontrada");
+                            Console.ResetColor();
+                        }
+                                KeyPress();
                         break;
 
                     case 5:
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Apagar as contas:\n\n ");
                         Console.ResetColor();
+
+                        Console.WriteLine("Digite o numero da conta: ");
+                        numero = Convert.ToInt32(Console.ReadLine());
+
+                        contas.Deletar(numero);
 
                         KeyPress();
                         break;
